@@ -51,6 +51,13 @@ If it says the file does not exist, simply open your Sublime- "Settings - User" 
 		"php_binary_path": "YOUR_PHP_BINARY_PATH"
 	}
 
+## Usage
+
+If the PHP-Syntax is active, select the piece of code you want to test, or select nothing so the whole file will be used and press this shortcut:
+
+	Ctrl+Shift+E
+
+or rightclick in the document and select "Instant PHP"
 
 ## Release Notes
 
