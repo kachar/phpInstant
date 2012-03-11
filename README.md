@@ -10,19 +10,19 @@ You have three ways to install the phpInstant: using git, installing it manually
 
 To install this Plugin via git, simply browse to your 'Packages' folder like this:
 
-Windows
+for Windows
 	
 	cd %APPDATA%/Sublime Text 2/Packages
 
-OS X
+for OS X
 	
 	cd ~/Library/Application Support/Sublime Text 2/Packages
 
-Linux
+for Linux
 	
 	cd ~/.Sublime Text 2/Packages
 
-Portable Installations
+for Portable Installations
 	
 	cd PATH_TO_PORTABLE_INSTALLATION/Sublime Text 2/Data/Packages
 
