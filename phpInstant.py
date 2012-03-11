@@ -1,11 +1,11 @@
-import sublime, sublime_plugin, subprocess, os
+import sublime, sublime_plugin, subprocess, os, re
 
 class phpInstantCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
 
 		# Check if Syntax is PHP else exit with message
 		if self.view.settings().get('syntax') != 'Packages/PHP/PHP.tmLanguage':
-			self.message('Error:', 'This doesn`t seem to be a valid PHP File')
+			self.output('This doesn`t seem to be a valid PHP File', 'Error:')
 			return False
 
 		# Get selection, if empty get tabs complete document
@@ -13,11 +13,15 @@ class phpInstantCommand(sublime_plugin.TextCommand):
 			selection = self.view.substr(self.view.sel()[0])
 		else:
 			selection = self.view.substr(sublime.Region(0, self.view.size()))
-			# Delete PHP-Tags if using the whole document
-			selection = selection.replace('<?php', '').replace('<?', '').replace('?>', '')
+		
+		code = selection
+		if "<?" in code:
+			part, value = code.split("<?",1)		
+			if "?>" not in part:
+				code = '?>' + code
 
-		code = "eval(base64_decode('%(selection)s'));" % \
-		{"selection": selection.encode("base64").replace('\n', '')}
+		code = "eval(base64_decode('%(code)s'));" % \
+		{"code": code.encode("base64").replace('\n', '')}
 
 		# Get PHP binary path if it is set
 		if self.view.settings().has('php_binary_path'):
@@ -32,13 +36,31 @@ class phpInstantCommand(sublime_plugin.TextCommand):
 		result, e = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True).communicate()
 		
 		# Display Result
-		self.message('PHP-Result:', result)
+		self.output(result, 'PHP-Result:')
 		
 
-	def message(self, title, value):
+	def single_line_output(self, title, value):
 		self.view.window().show_input_panel(title, value, None, None, None)
+
+	def multi_line_output(self, value, panel_name = 'phpInstant'):
+		# Create the output Panel and start edit
+		panel = self.view.window().get_output_panel(panel_name)
+		edit = panel.begin_edit()
+
+		# Insert value and end edit
+		panel.insert(edit, panel.size(), value + '\n')
+		panel.end_edit(edit)
+
+		# Show the panel
+		self.view.window().run_command("show_panel", {"panel": "output." + panel_name})
+
+	def output(self, value, title = ''):
+		if self.view.settings().get('phpinstant_singleline_output'):
+			self.single_line_output(title, value)
+		else:
+			self.multi_line_output(value)
 
 	def is_visible(self):
 	    view = sublime.active_window().active_view()
 	    if view:
-        	return view.settings().get('syntax') == 'Packages/PHP/PHP.tmLanguage'
+	    	return view.settings().get('syntax') == 'Packages/PHP/PHP.tmLanguage'

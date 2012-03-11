@@ -43,13 +43,15 @@ If you are familiar with Package Control you definetly know what to do, if not, 
 
 ## Settings
 
-phpInstant uses the php binary, by default it uses "php" without a binary-path. This should work fine if you have added your php binary path to your system path (you can check this if you type "php" in an terminal)
-
-If it says the file does not exist, simply open your Sublime- "Settings - User" File and insert this setting
+The following settings are available and optional, but the default settings should be mostly what you want if you install this plugin
 	
 	{
-		"php_binary_path": "YOUR_PHP_BINARY_PATH"
+		"php_binary_path": "YOUR_PHP_BINARY_PATH",
+		"phpinstant_singleline_output": false
 	}
+
+php_binary_path: The path to your PHP binary (fallback: "php"-call)
+phpinstant_singleline_output: true for output in a single output-line (cursor jumps right in)
 
 ## Usage
 
