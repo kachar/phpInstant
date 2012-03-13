@@ -1,3 +1,5 @@
 [
-	{ "keys": ["ctrl+shift+e"], "command": "php_instant" }
+	{ "keys": ["ctrl+shift+x"], "command": "php_instant_php" },
+	{ "keys": ["ctrl+shift+y"], "command": "php_instant_quick_panel"},
+	{ "keys": ["ctrl+shift+z"], "command": "php_instant_quick_panel"}
 ]

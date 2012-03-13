@@ -1,11 +1,10 @@
-import sublime, sublime_plugin, subprocess, os, re
+import sublime, sublime_plugin, subprocess, os
 
-class phpInstantCommand(sublime_plugin.TextCommand):
-	def run(self, edit):
+class phpInstant(sublime_plugin.TextCommand):
 
+	def interpretPHP(self, php_mode = True):
 		# Check if Syntax is PHP else exit with message
-		if self.view.settings().get('syntax') != 'Packages/PHP/PHP.tmLanguage':
-			self.output('This doesn`t seem to be a valid PHP File', 'Error:')
+		if not self.is_visible():
 			return False
 
 		# Get selection, if empty get tabs complete document
@@ -14,12 +13,17 @@ class phpInstantCommand(sublime_plugin.TextCommand):
 		else:
 			selection = self.view.substr(sublime.Region(0, self.view.size()))
 		
+		# Handle PHP- and HTML-modes
 		code = selection
-		if "<?" in code:
-			part, value = code.split("<?",1)		
-			if "?>" not in part:
-				code = '?>' + code
+		if php_mode == True: #PHP-Mode close PHP-tag if an opening one is at the beginning
+			if "<?" in selection:
+				part, value = selection.split("<?", 1)		
+				if "?>" not in part:
+					code = '?>' + selection
+		else: #HTML-Mode close PHP-tag at beginning
+			code = '?>' + selection
 
+		# base64 to prevent from bad characters
 		code = "eval(base64_decode('%(code)s'));" % \
 		{"code": code.encode("base64").replace('\n', '')}
 
@@ -37,22 +41,6 @@ class phpInstantCommand(sublime_plugin.TextCommand):
 		
 		# Display Result
 		self.output(result, 'PHP-Result:')
-		
-
-	def single_line_output(self, title, value):
-		self.view.window().show_input_panel(title, value, None, None, None)
-
-	def multi_line_output(self, value, panel_name = 'phpInstant'):
-		# Create the output Panel and start edit
-		panel = self.view.window().get_output_panel(panel_name)
-		edit = panel.begin_edit()
-
-		# Insert value and end edit
-		panel.insert(edit, panel.size(), value + '\n')
-		panel.end_edit(edit)
-
-		# Show the panel
-		self.view.window().run_command("show_panel", {"panel": "output." + panel_name})
 
 	def output(self, value, title = ''):
 		if self.view.settings().get('phpinstant_singleline_output'):
@@ -60,7 +48,52 @@ class phpInstantCommand(sublime_plugin.TextCommand):
 		else:
 			self.multi_line_output(value)
 
-	def is_visible(self):
+	def single_line_output(self, title, value):
+		self.view.window().show_input_panel(title, value, None, None, None)
+
+	def multi_line_output(self, value, panel_name = 'phpInstant'):
+		# Create the output Panel and start edit
+		panel = self.view.window().get_output_panel(panel_name)
+		panel.set_read_only(False)
+		edit = panel.begin_edit()
+		panel.insert(edit, panel.size(), value + '\n')
+		panel.end_edit(edit)
+		panel.set_read_only(True)
+		self.view.window().run_command("show_panel", {"panel": "output." + panel_name})
+
+
+	def is_visible(self): # This Plugin should just work in specific syntaxes
 	    view = sublime.active_window().active_view()
 	    if view:
 	    	return view.settings().get('syntax') == 'Packages/PHP/PHP.tmLanguage'
+
+
+
+# Command to run in PHP-Mode
+class phpInstantPhpCommand(phpInstant):
+
+	def run(self, edit):
+		self.interpretPHP(True)
+
+
+# Command to run in HTML-Mode
+class phpInstantHtmlCommand(phpInstant):
+
+	def run(self, edit):
+		self.interpretPHP(False)
+
+
+# Command to display Quick-Panel
+class phpInstantQuickPanelCommand(phpInstant):
+
+	def run(self, edit):
+		if self.is_visible():
+			self.view.window().show_quick_panel(['phpInstant (PHP Mode)', 'phpInstant (HTML Mode)'], self.done)
+
+	def done(self, number):
+		if number == 0:
+			self.interpretPHP(True)
+		elif number == 1:
+			self.interpretPHP(False)
+		else:
+			return

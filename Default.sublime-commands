@@ -1,0 +1,10 @@
+[
+    {
+        "caption": "phpInstant (PHP Mode)",
+        "command": "php_instant_php"
+    },
+    {
+        "caption": "phpInstant (HTML Mode)",
+        "command": "php_instant_html"
+    }
+]

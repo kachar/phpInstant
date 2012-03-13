@@ -37,7 +37,7 @@ and clone this repository
 * Unzip the files and rename the folder to 'phpInstant'
 * Copy the folder to your Sublime Text 2 'Packages' directory
 
-### Install using Package Control
+### Install using Package Control (hopefully soon)
 
 If you are familiar with Package Control you definetly know what to do, if not, go to [SublimeText2 - Package Control](http://wbond.net/sublime_packages/package_control) click on 'Install' and follow the instructions
 
@@ -55,11 +55,21 @@ phpinstant_singleline_output: true for output in a single output-line (cursor ju
 
 ## Usage
 
-If the PHP-Syntax is active, select the piece of code you want to test, or select nothing so the whole file will be used and press this shortcut:
+The Plugin differs in two Modes:
 
-	Ctrl+Shift+E
+	PHP-Mode: if the current selection, or if nothing is selected, the whole document starts with PHP-Code (this Mode is pretty accommodating, so it could even work if the selection starts with HTML or Plaintext)
 
-or rightclick in the document and select "Instant PHP"
+	HTML-Mode: if the current selection, or if nothing is selected, the whole document starts with HTML-Code or Plaintext
+
+If the PHP-Syntax is active, select the piece of code you want to get an output from, or select nothing, so the whole file will be used and press this shortcut:
+
+	Ctrl+Shift+X (PHP-Mode)
+
+If your output will contain a parse error on line 1, you should try the HTML-Mode, you have 3 ways to do this:
+
+* Ctrl+Shift+Y (Quick Panel) and select the Mode you want to run
+* Ctrl+Shift+P (Command Palette), type "phpInstant" and select the Mode you want to run
+* Rightclick in the document and select the Mode you want to run from the "phpInstant"-Menu
 
 ## Release Notes
 

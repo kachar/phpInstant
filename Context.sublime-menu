@@ -1,6 +1,10 @@
 [
     {
-        "caption":"Instant PHP",
-        "command": "php_instant"
+        "caption": "phpInstant",
+        "children": 
+        	[
+        		{"caption": "PHP Mode", "command": "php_instant_php"},
+        		{"caption": "HTML Mode", "command": "php_instant_html"}
+        	]
     }
 ]
