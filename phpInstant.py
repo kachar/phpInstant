@@ -55,8 +55,9 @@ class phpInstant(sublime_plugin.TextCommand):
 		# Create the output Panel and start edit
 		panel = self.view.window().get_output_panel(panel_name)
 		panel.set_read_only(False)
+		panel.set_syntax_file('Packages/Text/Plain text.tmLanguage')
 		edit = panel.begin_edit()
-		panel.insert(edit, panel.size(), value + '\n')
+		panel.insert(edit, panel.size(), value)
 		panel.end_edit(edit)
 		panel.set_read_only(True)
 		self.view.window().run_command("show_panel", {"panel": "output." + panel_name})
