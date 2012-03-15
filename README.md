@@ -37,7 +37,7 @@ and clone this repository
 * Unzip the files and rename the folder to 'phpInstant'
 * Copy the folder to your Sublime Text 2 'Packages' directory
 
-### Install using Package Control (hopefully soon)
+### Install using Package Control
 
 If you are familiar with Package Control you definetly know what to do, if not, go to [SublimeText2 - Package Control](http://wbond.net/sublime_packages/package_control) click on 'Install' and follow the instructions
 
