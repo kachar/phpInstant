@@ -1,5 +1,7 @@
 {
 	"php_binary_path": "/usr/bin/php",
 	"phpinstant_singleline_output": false,
-	"phpinstant_allowed_syntax": ["php", "html", "plain"]
+	
+	// "*" will match all syntaxes
+	"phpinstant_allowed_syntax": ["php", "html", "*"]
 }

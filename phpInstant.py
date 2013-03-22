@@ -6,6 +6,7 @@ import re
 
 
 class phpInstant(sublime_plugin.TextCommand):
+    settings = sublime.load_settings("phpInstant.sublime-settings")
 
     def interpretPHP(self, php_mode=True):
         # Check if Syntax is PHP else exit with message
@@ -35,13 +36,13 @@ class phpInstant(sublime_plugin.TextCommand):
             {"code": code.encode("base64").replace('\n', '')}
 
         # Get PHP binary path if it is set
-        if self.view.settings().has('php_binary_path'):
-            path = os.path.realpath(self.view.settings().get('php_binary_path')) + "/"
+        if self.settings.has('php_binary_path'):
+            path = os.path.realpath(self.settings.get('php_binary_path'))
         else:
-            path = ''
+            path = 'php'
 
         # Prepare command to execute
-        command = '%(path)sphp -r "%(code)s"' % \
+        command = '%(path)s -r "%(code)s"' % \
             {"path": path, "code": code}
 
         # Execute the command
@@ -51,7 +52,7 @@ class phpInstant(sublime_plugin.TextCommand):
         self.output(result, 'PHP-Result:')
 
     def output(self, value, title=''):
-        if self.view.settings().get('phpinstant_singleline_output'):
+        if self.settings.get('phpinstant_singleline_output'):
             self.single_line_output(title, value)
         else:
             self.multi_line_output(value)
@@ -75,10 +76,12 @@ class phpInstant(sublime_plugin.TextCommand):
         view = sublime.active_window().active_view()
         if view:
             syntax = view.settings().get('syntax')
-            if self.view.settings().get('phpinstant_allowed_syntax'):
-                words = self.view.settings().get('phpinstant_allowed_syntax')
+            if self.settings.has('phpinstant_allowed_syntax'):
+                words = [str(x) for x in self.settings.get('phpinstant_allowed_syntax')]
             else:
-                words = ["php"]
+                words = ["php", "*"]
+            if "*" in words:
+                return True
             exactMatch = re.compile(r'\b%s\b' % '\\b|\\b'.join(words), flags=re.IGNORECASE)
             return exactMatch.findall(syntax)
 
