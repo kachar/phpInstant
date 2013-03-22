@@ -75,7 +75,10 @@ class phpInstant(sublime_plugin.TextCommand):
         view = sublime.active_window().active_view()
         if view:
             syntax = view.settings().get('syntax')
-            words = ["php", "html"]
+            if self.view.settings().get('phpinstant_allowed_syntax'):
+                words = self.view.settings().get('phpinstant_allowed_syntax')
+            else:
+                words = ["php"]
             exactMatch = re.compile(r'\b%s\b' % '\\b|\\b'.join(words), flags=re.IGNORECASE)
             return exactMatch.findall(syntax)
 
